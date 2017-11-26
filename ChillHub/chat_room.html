@@ -89,8 +89,10 @@
                         <ul class="artistlist">
                             <li class="artistlist cf" ng-repeat="my_item in chat_messages">
                                 <!-- anything with ng has to do with angular -->
-                                <div class="info">
-                                    <p>{{my_item.username}} : {{my_item.message}}</p>
+                                <div class="row">
+                                <div class="info col s12">
+                                    <p class="left">{{my_item.username}} : {{my_item.message}}</p>
+                                </div>
                                 </div>
                             </li>
                         </ul>
