@@ -1,0 +1,7 @@
+#group-name{
+	border-style: none; 
+    border-color: Transparent; 
+    overflow: auto;   
+    width: 50%;
+    resize: none;
+}
