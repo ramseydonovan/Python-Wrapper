@@ -17,6 +17,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.json.simple.parser.ParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -81,21 +82,33 @@ public class ChatServlet extends HttpServlet {
 	     
 	   switch (requestType) {
 		   case "newUser":{
-			   if (userMap.containsKey(username)){
-				   System.out.println("used userName " + username);
-				   //username already exists sorry
-				   response.sendRedirect("ChillHub/html/ChillHub/username_taken.html");
-			   } 
-			   else {
-				  // username is free, you got it
-				   System.out.println("new userName " + username);
-				   String password = request.getParameter("password");
-				   User newUser = new User(username, password);
-				   userMap.put("username",newUser);
-				   session.setAttribute("user", newUser);
-				   // need to store the user in a data base as well 
-				   response.sendRedirect("ChillHub/html/ChillHub/chat_room.html");
-			   }
+			   //if (userMap.containsKey(username)){
+			   UserDataManager userDataManager;
+			try {
+				userDataManager = new UserDataManager();
+				if (userDataManager.checkIfUserExists(username)){ 
+					   System.out.println("used userName " + username);
+					   //username already exists sorry
+					   response.sendRedirect("ChillHub/html/ChillHub/username_taken.html");
+				   } 
+				   else {
+					  // username is free, you got it
+					   System.out.println("new userName " + username);
+					   String password = request.getParameter("password");
+					   User newUser = new User(username, password);
+					   userMap.put("username",newUser);
+					   session.setAttribute("user", newUser);
+					   
+					   //add new user to json data
+					   userDataManager.addNewUser(username, password);
+					   
+					   // need to store the user in a data base as well 
+					   response.sendRedirect("ChillHub/html/ChillHub/chat_room.html");
+				   }
+			} catch (ParseException e) {
+				System.out.println("error when parsing json");
+			}
+			   
 			   break;
 		   }
 		   case "poll": {
